@@ -1,0 +1,10 @@
+[Unit]
+Description=Radenlac Springboot app
+After=syslog.target
+
+[Service]
+User=fedora
+ExecStart=/opt/radenlac/app.jar SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

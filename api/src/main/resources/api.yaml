@@ -1,0 +1,273 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Radnelac
+servers:
+  - url: http://localhost:8080/
+paths:
+  /number:
+    get:
+      summary: Validate and or register a number for a client
+      operationId: validate
+      tags:
+        - validateNumber
+      parameters:
+        - name: num
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paged array of schedules
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NumberValidationResult"
+  /rendez-vous:
+    post:
+      summary: create a rendez vous in the servicer context
+      operationId: createRendezVous
+      tags:
+        - rendezVousManagement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RendezVousForm"
+      responses:
+        '200':
+          description: the rendezvous recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendezVousListItem"
+    get:
+      summary: return a paginate list of rdv for the authenticated servicer
+      operationId: listRendezVous
+      tags:
+        - rendezVousManagement
+      parameters:
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: page
+          schema:
+            $ref: "#/components/schemas/Page"
+      responses:
+        '200':
+          description: list of rendezvous
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendezVousList"
+
+  /public/rendez-vous/{rdvId}:
+    get:
+      operationId: publicRendezVousView
+      tags:
+        - publicRendezVous
+      parameters:
+        - name: rdvId
+          in: path
+          description: | 
+            public id of the rdv
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: public accessible view of rendezvous
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendezVousPublicView"
+
+  /rendez-vous/{rdvId}:
+    get:
+      operationId: privateRendezVousView
+      tags:
+        - rendezVousManagement
+      parameters:
+        - name: rdvId
+          in: path
+          description: |
+            public id of the rdv
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: private accessible view of rendezvous
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendezVousListItem"
+
+  /public/rendez-vous/confirmation:
+    post:
+      summary: confirm or decline a rendez-vous
+      operationId: confirmRendezVous
+      tags:
+        - publicRendezVous
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RendezVousConfirmation"
+      responses:
+        '200':
+          description: private accessible view of rendezvous
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendezVousConfirmationResponse"
+
+
+components:
+  schemas:
+    RendezVousForm:
+      type: object
+      properties:
+        phone:
+          type: string
+        date:
+          type: string
+          format: date-time
+        note:
+          type: string
+          maxLength: 500
+        clientName:
+          type: string
+          maxLength: 100
+        prepayment:
+          type: integer
+          format: int64
+          description: |
+            amount expressed in Euro cent
+
+    NumberValidationResult:
+      type: object
+      properties:
+        number:
+          type: string
+        result:
+          type: string
+          description: |
+            in practice, an enum : VALID - BLACKLIST
+    RendezVousList:
+      type: object
+      properties:
+        rdv:
+          type: array
+          items:
+            $ref: "#/components/schemas/RendezVousListItem"
+        totalItems:
+          type: integer
+          format: int64
+        currentPage:
+          type: integer
+          format: int64
+    RendezVousListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        phone:
+          type: string
+        registrationDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        note:
+          type: string
+          maxLength: 500
+        confirmationLink:
+          type: string
+        prepayment:
+          type: integer
+          format: int64
+          description: |
+            amount expressed in Euro cent
+        status:
+          type: string
+        clientName:
+          type: string
+
+    RendezVousPublicView:
+      type: object
+      properties:
+        publicId:
+          type: string
+        registrationDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        servicerName:
+          type: string
+        prepayment:
+          type: integer
+          format: int64
+          description: |
+            amount expressed in Euro cent
+
+    RendezVousConfirmation:
+      type: object
+      properties:
+        publicId:
+          type: string
+        accept:
+          type: boolean
+        note:
+          type: string
+          maxLength: 500
+    RendezVousConfirmationResponse:
+      type: object
+      properties:
+        publicId:
+          type: string
+        accept:
+          type: boolean
+        paymentUrl:
+          type: string
+    Page: #used for generic pagination
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int64
+        sort:
+          type: object
+          properties:
+            criteria:
+              type: string
+            order:
+              type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

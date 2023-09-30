@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/radnelac
+    username: radnelac
+    password: root
+#  security:
+#    user:
+#      name: root
+#      password: root
+  flyway:
+    clean-disabled: false
+    clean-on-validation-error: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL # HEADERS, FULL, basic
+      banking-api:
+        url: ${radnelac.banking.api}
+radnelac:
+  banking:
+    shop-url: "https://ben.gui.com"
+    customer-id: "269604"
+    secure-paygate: "17759362"
+    ecommerce: "17759363"
+    api: "https://test.saferpay.com/api/"
+#    todo: for production grade system, use client cert auth
+    username: "API_269604_00008357"
+    password: "0qyawbpmas2=tG@{"
+    method: 
+#      - ACCOUNTTOACCOUNT
+#      - ALIPAY
+#      - AMEX
+      - BANCONTACT
+#      - BONUS
+#      - DINERS
+#      - CARD
+      - DIRECTDEBIT
+#      - EPRZELEWY
+#      - EPS
+#      - GIROPAY
+#      - IDEAL
+#      - INVOICE
+#      - JCB
+      - KLARNA
+      - MAESTRO
+      - MASTERCARD
+#      - MYONE
+      - PAYCONIQ
+#      - PAYDIREKT
+      - PAYPAL
+#      - POSTCARD
+#      - POSTFINANCE
+#      - SOFORT
+#      - TWINT
+#      - UNIONPAY
+      - VISA
+#      - WLCRYPTOPAYMENTS
