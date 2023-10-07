@@ -8,12 +8,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="app" />
+        <module name="poseidon-app" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api" target="17" />
       <module name="app" target="17" />
+      <module name="poseidon-app" target="11" />
       <module name="radnelac" target="17" />
+      <module name="sample" target="11" />
+      <module name="sinui" target="11" />
       <module name="webapp" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -21,6 +25,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api" options="-parameters" />
       <module name="app" options="-parameters" />
+      <module name="poseidon-app" options="-parameters" />
       <module name="radnelac" options="" />
       <module name="webapp" options="-parameters" />
     </option>

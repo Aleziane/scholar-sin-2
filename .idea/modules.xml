@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/api/api.iml" filepath="$PROJECT_DIR$/api/api.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gui/poseidon-app.iml" filepath="$PROJECT_DIR$/gui/poseidon-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/radnelac.iml" filepath="$PROJECT_DIR$/radnelac.iml" />
     </modules>
   </component>
